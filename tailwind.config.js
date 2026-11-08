@@ -1,0 +1,62 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          50: '#EEF8F1',
+          100: '#D6EFDD',
+          200: '#AEDFBD',
+          300: '#7DCA96',
+          400: '#4BB172',
+          500: '#2A9456',
+          600: '#1E7A46',
+          700: '#18623A',
+          800: '#144D2F',
+          900: '#0F3B24',
+        },
+        sun: {
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#F5B82E',
+          500: '#E0A21A',
+          600: '#B7800C',
+          700: '#8F620A',
+          800: '#6E4A0C',
+          900: '#4A3008',
+        },
+        ember: {
+          50: '#FEF2F2',
+          100: '#FEE2E2',
+          200: '#FECACA',
+          300: '#FCA5A5',
+          400: '#F26B6B',
+          500: '#D6283C',
+          600: '#B81D2F',
+          700: '#941826',
+          800: '#7A1A24',
+          900: '#4C0D14',
+        },
+        ocean: {
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6',
+          600: '#2563EB',
+          700: '#1D4ED8',
+          800: '#1E40AF',
+          900: '#1E3A8A',
+        },
+      },
+    },
+  },
+  plugins: [],
+};
