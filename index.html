@@ -1,20 +1,571 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet" />
-    <meta name="description" content="Buy, sell, and connect with verified local sellers across Lilongwe." />
-    <title>The Plug & Socket App | Lilongwe Marketplace</title>
-    <meta property="og:image" content="https://bolt.new/static/og_default.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Plug & Socket App | Malawi's Premier Marketplace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        malawiGreen: '#007A3D',
+                        malawiRed: '#CE1126',
+                        malawiBlack: '#111827',
+                        malawiGold: '#FCD116',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .card-zoom img {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-zoom:hover img {
+            transform: scale(1.06);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col pb-16 md:pb-0">
+
+    <!-- Top Announcement Banner -->
+    <div class="bg-gradient-to-r from-malawiBlack via-malawiGreen to-malawiRed text-white text-xs sm:text-sm py-2 px-4 text-center font-medium shadow-inner flex items-center justify-center gap-2">
+        <i class="fa-solid fa-bolt text-malawiGold animate-pulse"></i> 
+        <span>Lilongwe Marketplace: Verified Sellers pay <strong>10,000 MWK</strong> via Airtel Money / Mpamba for unlimited listings!</span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('marketplace')">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-malawiGreen via-malawiRed to-malawiGold flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-plug-circle-bolt text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-malawiGreen to-malawiRed bg-clip-text text-transparent">
+                        The Plug & Socket
+                    </h1>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Malawi • Lilongwe Hub</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-bold text-slate-600">
+                <button onclick="switchTab('marketplace')" id="nav-marketplace" class="text-malawiGreen transition flex items-center gap-2 py-2 border-b-2 border-malawiGreen">
+                    <i class="fa-solid fa-store"></i> Marketplace
+                </button>
+                <button onclick="switchTab('membership')" id="nav-membership" class="hover:text-malawiGreen transition flex items-center gap-2 py-2 border-b-2 border-transparent">
+                    <i class="fa-solid fa-id-card text-malawiRed"></i> 10K MWK Membership
+                </button>
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="hover:text-malawiGreen transition flex items-center gap-2 py-2 border-b-2 border-transparent">
+                    <i class="fa-solid fa-chart-line text-amber-500"></i> Owner Portal
+                </button>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="openPostAdModal()" class="bg-gradient-to-r from-malawiGreen to-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Post Ad
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= MARKETPLACE TAB ================= -->
+        <div id="tab-marketplace" class="space-y-6">
+            <!-- Search Hero Box -->
+            <div class="bg-gradient-to-br from-slate-900 via-malawiBlack to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="max-w-3xl space-y-3 relative z-10">
+                    <span class="bg-malawiGold/20 text-malawiGold border border-malawiGold/30 text-[11px] px-3 py-1 rounded-full font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-location-dot"></i> Lilongwe Region
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                        Find verified deals. <br/><span class="text-malawiGold">Plug into your local network.</span>
+                    </h2>
+                </div>
+
+                <!-- Modern Filter Toolbar -->
+                <div class="mt-8 bg-white p-3 rounded-2xl shadow-2xl grid grid-cols-1 sm:grid-cols-12 gap-3 text-slate-800 relative z-10">
+                    <div class="sm:col-span-4 relative flex items-center">
+                        <i class="fa-solid fa-search absolute left-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="filterListings()" placeholder="Search phones, cars, maize, generators..." class="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-malawiGreen border border-slate-200">
+                    </div>
+                    <div class="sm:col-span-3">
+                        <select id="categoryFilter" onchange="filterListings()" class="w-full px-4 py-3 bg-slate-50 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-malawiGreen border border-slate-200 font-medium">
+                            <option value="">All Categories</option>
+                            <option value="Electronics">Electronics & Phones</option>
+                            <option value="Vehicles">Used Cars / Yatu</option>
+                            <option value="Home">Home & Power</option>
+                            <option value="Agriculture">Agriculture & Produce</option>
+                            <option value="Fashion">Fashion & Shoes</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <select id="locationFilter" onchange="filterListings()" class="w-full px-4 py-3 bg-slate-50 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-malawiGreen border border-slate-200 font-medium">
+                            <option value="">All Lilongwe Areas</option>
+                            <option value="Area 3">Area 3</option>
+                            <option value="Area 10">Area 10</option>
+                            <option value="Area 47">Area 47</option>
+                            <option value="City Centre">City Centre</option>
+                            <option value="Kanengo">Kanengo</option>
+                            <option value="Old Town">Old Town</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2 flex items-center justify-center">
+                        <label class="flex items-center gap-2 cursor-pointer bg-slate-50 border border-slate-200 w-full h-full px-3 py-2 rounded-xl text-xs font-bold text-slate-700">
+                            <input type="checkbox" id="verifiedOnlyFilter" onchange="filterListings()" class="rounded text-malawiGreen focus:ring-malawiGreen">
+                            <span>Verified Plugs</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Quick Pills -->
+            <div class="flex items-center space-x-3 overflow-x-auto pb-2 hide-scrollbar">
+                <button onclick="setCategoryQuick('')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow">All Items</button>
+                <button onclick="setCategoryQuick('Electronics')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 hover:border-malawiGreen text-slate-700 transition">📱 Electronics</button>
+                <button onclick="setCategoryQuick('Vehicles')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 hover:border-malawiGreen text-slate-700 transition">🚗 Cars (Yatu)</button>
+                <button onclick="setCategoryQuick('Agriculture')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 hover:border-malawiGreen text-slate-700 transition">🌽 Produce & Maize</button>
+                <button onclick="setCategoryQuick('Home')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 hover:border-malawiGreen text-slate-700 transition">⚡ Power & Home</button>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-malawiRed"></i> Live Listings in Lilongwe
+                </h3>
+                <span id="resultsCount" class="text-xs font-semibold text-slate-500 bg-slate-200 px-3 py-1 rounded-full">Showing items</span>
+            </div>
+
+            <!-- Listings Grid -->
+            <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- ================= MEMBERSHIP TAB ================= -->
+        <div id="tab-membership" class="hidden space-y-8 max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-malawiGreen to-emerald-800 rounded-3xl p-8 text-white shadow-xl text-center space-y-4 relative overflow-hidden">
+                <span class="bg-malawiGold text-slate-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">Verified Plug Program</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold">Become a Verified Plug in Malawi</h2>
+                <p class="text-emerald-100 max-w-xl mx-auto text-sm">
+                    Unlock unlimited listing rights, priority ranking in Lilongwe search feeds, and an official **Verified Plug** shield for a one-time fee of <strong>10,000 MWK</strong> via Airtel Money or TNM Mpamba.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-200 space-y-6">
+                    <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">What You Get</h3>
+                    <ul class="space-y-4 text-xs sm:text-sm text-slate-700">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-malawiGreen text-base mt-0.5"></i><strong>Official Verified Badge:</strong> Trust status across all listings.</li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-malawiGreen text-base mt-0.5"></i><strong>Unlimited Ad Postings:</strong> No posting limits or hidden charges.</li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-circle-check text-malawiGreen text-base mt-0.5"></i><strong>Direct WhatsApp Link:</strong> Instant buyer connections.</li>
+                    </ul>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-200 space-y-6">
+                    <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">10,000 MWK Mobile Money Checkout</h3>
+                    <form id="membershipForm" onsubmit="triggerPaymentModal(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Full Name</label>
+                            <input type="text" id="memberName" required placeholder="Kondwani Banda" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-malawiGreen focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Lilongwe Area</label>
+                            <select id="memberLocation" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-malawiGreen focus:outline-none">
+                                <option value="Area 3">Area 3</option>
+                                <option value="Area 10">Area 10</option>
+                                <option value="Area 47">Area 47</option>
+                                <option value="City Centre">City Centre</option>
+                                <option value="Kanengo">Kanengo</option>
+                                <option value="Old Town">Old Town</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Provider</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="border border-slate-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="provider" value="Airtel Money" checked class="text-malawiRed focus:ring-malawiRed">
+                                    <span class="text-xs font-bold">Airtel Money</span>
+                                </label>
+                                <label class="border border-slate-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="provider" value="TNM Mpamba" class="text-malawiGreen focus:ring-malawiGreen">
+                                    <span class="text-xs font-bold">TNM Mpamba</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Phone (+265)</label>
+                            <input type="tel" id="memberPhone" required placeholder="099..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-malawiGreen focus:outline-none">
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-malawiRed text-white rounded-xl font-bold text-xs sm:text-sm shadow-lg hover:bg-rose-700 transition">
+                            Pay 10,000 MWK & Get Verified
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= OWNER DASHBOARD TAB ================= -->
+        <div id="tab-dashboard" class="hidden space-y-6">
+            <div class="bg-slate-900 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <span class="bg-amber-500/20 text-malawiGold border border-malawiGold/30 text-xs px-3 py-1 rounded-full font-bold uppercase">Owner Portal</span>
+                    <h2 class="text-2xl font-extrabold mt-2">Revenue & Member Analytics</h2>
+                </div>
+                <div class="bg-white/10 px-6 py-4 rounded-2xl border border-white/10 text-center">
+                    <p class="text-xs text-slate-300 font-medium">Total Platform Commission</p>
+                    <p id="totalRevenueDisplay" class="text-2xl font-black text-malawiGold mt-1">0 MWK</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-2">
+                    <span class="text-xs font-bold uppercase text-slate-500">Verified Members</span>
+                    <p id="statMembersCount" class="text-3xl font-black text-slate-900">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-2">
+                    <span class="text-xs font-bold uppercase text-slate-500">Active Listings</span>
+                    <p id="statListingsCount" class="text-3xl font-black text-slate-900">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-2">
+                    <span class="text-xs font-bold uppercase text-slate-500">Earnings Pool (10K each)</span>
+                    <p id="statEarningsCount" class="text-3xl font-black text-slate-900">0 MWK</p>
+                </div>
+            </div>
+
+            <!-- Ledger Table -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-base font-bold text-slate-900">Paid Memberships Log</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-200 text-slate-400 uppercase">
+                                <th class="py-3 px-4 font-bold">Name</th>
+                                <th class="py-3 px-4 font-bold">Location</th>
+                                <th class="py-3 px-4 font-bold">Provider</th>
+                                <th class="py-3 px-4 font-bold">Phone</th>
+                                <th class="py-3 px-4 font-bold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mobile Sticky Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-2.5 px-6 flex justify-around items-center md:hidden z-30">
+        <button onclick="switchTab('marketplace')" class="flex flex-col items-center text-malawiGreen font-bold text-[10px]">
+            <i class="fa-solid fa-store text-lg"></i> Marketplace
+        </button>
+        <button onclick="switchTab('membership')" class="flex flex-col items-center text-slate-500 font-bold text-[10px]">
+            <i class="fa-solid fa-id-card text-lg text-malawiRed"></i> Membership
+        </button>
+        <button onclick="switchTab('dashboard')" class="flex flex-col items-center text-slate-500 font-bold text-[10px]">
+            <i class="fa-solid fa-chart-line text-lg text-amber-500"></i> Owner Portal
+        </button>
+    </div>
+
+    <!-- POST AD MODAL -->
+    <div id="postAdModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+            <div class="bg-malawiGreen p-5 text-white flex items-center justify-between">
+                <h3 class="text-base font-bold flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Post Ad in Lilongwe</h3>
+                <button onclick="closePostAdModal()" class="text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="postAdForm" onsubmit="submitNewAd(event)" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Item Title</label>
+                    <input type="text" id="adTitle" required placeholder="Samsung Galaxy S22" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Category</label>
+                        <select id="adCategory" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Vehicles">Vehicles</option>
+                            <option value="Home">Home</option>
+                            <option value="Agriculture">Agriculture</option>
+                            <option value="Fashion">Fashion</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Price (MWK)</label>
+                        <input type="number" id="adPrice" required placeholder="350000" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Lilongwe Area</label>
+                        <select id="adLocation" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm">
+                            <option value="City Centre">City Centre</option>
+                            <option value="Area 3">Area 3</option>
+                            <option value="Area 10">Area 10</option>
+                            <option value="Area 47">Area 47</option>
+                            <option value="Kanengo">Kanengo</option>
+                            <option value="Old Town">Old Town</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">WhatsApp (+265)</label>
+                        <input type="tel" id="adPhone" required placeholder="099..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Description</label>
+                    <textarea id="adDesc" rows="3" required placeholder="Describe item condition..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-malawiGreen text-white rounded-xl font-bold text-xs sm:text-sm shadow-lg">
+                    Publish Ad
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- USSD SIMULATION MODAL -->
+    <div id="ussdModal" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center space-y-4">
+            <div class="w-14 h-14 rounded-full bg-red-100 text-malawiRed mx-auto flex items-center justify-center text-2xl">
+                <i class="fa-solid fa-mobile-retro animate-bounce"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">USSD Push Prompt Sent</h3>
+            <p class="text-xs text-slate-600">
+                Please check your phone screen to enter your <strong id="ussdProviderName">Airtel Money</strong> PIN and confirm the payment of <strong>10,000 MWK</strong>.
+            </p>
+            <div class="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                <input type="password" id="simulatedPin" maxlength="4" placeholder="Enter 4-Digit PIN" class="w-full text-center tracking-widest text-lg py-2 border rounded-lg focus:outline-none">
+            </div>
+            <button onclick="confirmPinPayment()" class="w-full py-3 bg-malawiGreen text-white rounded-xl font-bold text-xs shadow-md">
+                Confirm & Complete Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let listings = [
+            {
+                id: 1,
+                title: "Samsung Galaxy S22 Ultra 5G",
+                category: "Electronics",
+                price: 550000,
+                location: "City Centre",
+                phone: "+265 99 123 4567",
+                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&auto=format&fit=crop&q=60",
+                desc: "Mint condition, 256GB storage, original charger included.",
+                verified: true,
+                rating: 4.9,
+                reviews: 14
+            },
+            {
+                id: 2,
+                title: "Toyota Passo (Automatic)",
+                category: "Vehicles",
+                price: 4200000,
+                location: "Area 3",
+                phone: "+265 88 987 6543",
+                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=60",
+                desc: "Very clean engine, fresh import, duty fully paid.",
+                verified: true,
+                rating: 5.0,
+                reviews: 8
+            },
+            {
+                id: 3,
+                title: "White Maize Grain (50kg Bag)",
+                category: "Agriculture",
+                price: 35000,
+                location: "Kanengo",
+                phone: "+265 99 555 1212",
+                image: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=60",
+                desc: "High quality dried white maize from farm harvest.",
+                verified: false,
+                rating: 4.2,
+                reviews: 3
+            }
+        ];
+
+        let members = [
+            { name: "Kondwani Banda", location: "Area 3", provider: "Airtel Money", phone: "+265991112233" }
+        ];
+
+        let pendingMember = null;
+
+        function switchTab(tabId) {
+            ['marketplace', 'membership', 'dashboard'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            if (tabId === 'dashboard') updateDashboardStats();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderListings(itemsToRender) {
+            const grid = document.getElementById('listingsGrid');
+            grid.innerHTML = '';
+
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium">No listings found matching your search.</div>`;
+                document.getElementById('resultsCount').innerText = '0 items';
+                return;
+            }
+
+            document.getElementById('resultsCount').innerText = `Showing ${itemsToRender.length} item(s)`;
+
+            itemsToRender.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl shadow-sm hover:shadow-xl transition border border-slate-200 overflow-hidden flex flex-col justify-between card-zoom group";
+                card.innerHTML = `
+                    <div class="relative overflow-hidden bg-slate-100 h-48">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-full font-bold">
+                            ${item.category}
+                        </div>
+                        ${item.verified ? '<div class="absolute top-3 right-3 bg-malawiGreen text-white text-[10px] px-2.5 py-1 rounded-full font-bold shadow flex items-center gap-1"><i class="fa-solid fa-shield-check"></i> Plugged In</div>' : ''}
+                    </div>
+                    <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                                <span><i class="fa-solid fa-location-dot text-malawiRed mr-1"></i>${item.location}</span>
+                                <span class="text-amber-500 font-bold"><i class="fa-solid fa-star"></i> ${item.rating} (${item.reviews})</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm line-clamp-1">${item.title}</h4>
+                            <p class="text-xs text-slate-500 line-clamp-2 mt-1">${item.desc}</p>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">Price</span>
+                                <span class="text-base font-black text-malawiRed">${item.price.toLocaleString()} MWK</span>
+                            </div>
+                            <a href="https://wa.me/${item.phone.replace(/[^0-9]/g, '')}?text=Hello,%20I%20am%20interested%20in%20*${encodeURIComponent(item.title)}*" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
+                                <i class="fa-brands fa-whatsapp"></i> Chat
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterListings() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const location = document.getElementById('locationFilter').value;
+            const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
+
+            const filtered = listings.filter(item => {
+                const matchesQuery = item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
+                const matchesCat = category === "" || item.category === category;
+                const matchesLoc = location === "" || item.location === location;
+                const matchesVer = !verifiedOnly || item.verified;
+                return matchesQuery && matchesCat && matchesLoc && matchesVer;
+            });
+
+            renderListings(filtered);
+        }
+
+        function setCategoryQuick(cat) {
+            document.getElementById('categoryFilter').value = cat;
+            filterListings();
+        }
+
+        function triggerPaymentModal(event) {
+            event.preventDefault();
+            const name = document.getElementById('memberName').value;
+            const location = document.getElementById('memberLocation').value;
+            const provider = document.querySelector('input[name="provider"]:checked').value;
+            const phone = document.getElementById('memberPhone').value;
+
+            pendingMember = { name, location, provider, phone };
+            document.getElementById('ussdProviderName').innerText = provider;
+            document.getElementById('ussdModal').classList.remove('hidden');
+        }
+
+        function confirmPinPayment() {
+            const pin = document.getElementById('simulatedPin').value;
+            if (pin.length < 4) return alert('Enter your 4-digit PIN to confirm payment.');
+
+            members.unshift(pendingMember);
+            document.getElementById('ussdModal').classList.add('hidden');
+            document.getElementById('membershipForm').reset();
+            alert(`Payment of 10,000 MWK confirmed! You are now a Verified Plug.`);
+            switchTab('marketplace');
+        }
+
+        function openPostAdModal() { document.getElementById('postAdModal').classList.remove('hidden'); }
+        function closePostAdModal() { document.getElementById('postAdModal').classList.add('hidden'); }
+
+        function submitNewAd(event) {
+            event.preventDefault();
+            const newAd = {
+                id: listings.length + 1,
+                title: document.getElementById('adTitle').value,
+                category: document.getElementById('adCategory').value,
+                price: parseFloat(document.getElementById('adPrice').value),
+                location: document.getElementById('adLocation').value,
+                phone: document.getElementById('adPhone').value,
+                image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=60",
+                desc: document.getElementById('adDesc').value,
+                verified: true,
+                rating: 5.0,
+                reviews: 1
+            };
+
+            listings.unshift(newAd);
+            closePostAdModal();
+            document.getElementById('postAdForm').reset();
+            renderListings(listings);
+        }
+
+        function updateDashboardStats() {
+            const totalMembers = members.length;
+            const totalEarnings = totalMembers * 10000;
+
+            document.getElementById('statMembersCount').innerText = totalMembers;
+            document.getElementById('statListingsCount').innerText = listings.length;
+            document.getElementById('statEarningsCount').innerText = totalEarnings.toLocaleString() + ' MWK';
+            document.getElementById('totalRevenueDisplay').innerText = totalEarnings.toLocaleString() + ' MWK';
+
+            const tbody = document.getElementById('membersTableBody');
+            tbody.innerHTML = '';
+            members.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-slate-900">${m.name}</td>
+                    <td class="py-3 px-4">${m.location}</td>
+                    <td class="py-3 px-4"><span class="bg-red-100 text-malawiRed px-2 py-0.5 rounded-full text-[10px] font-bold">${m.provider}</span></td>
+                    <td class="py-3 px-4">${m.phone}</td>
+                    <td class="py-3 px-4"><span class="bg-emerald-100 text-malawiGreen px-2 py-0.5 rounded-full text-[10px] font-bold">10K Paid</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.onload = function() { renderListings(listings); };
+    </script>
+</body>
 </html>
